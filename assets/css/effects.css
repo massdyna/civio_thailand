@@ -1,0 +1,181 @@
+/* =========================================================
+   CiViO effects layer — additions only (loader, transitions,
+   tilt, lightbox, gallery, progress, product-slide fit)
+   ========================================================= */
+
+/* ---------- Page loader + page transition ---------- */
+html::after{content:"";position:fixed;inset:0;z-index:2147483000;background:#fffefa url("../images/civio-mascot.png") center 44%/clamp(86px,12vw,128px) auto no-repeat;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .55s ease,visibility .55s}
+html::before{content:"";position:fixed;left:50%;top:calc(44% + clamp(70px,9vw,96px));width:150px;height:4px;margin-left:-75px;border-radius:4px;z-index:2147483001;background:linear-gradient(90deg,#659840 0 38%,#e3e9d8 38% 100%);background-size:200% 100%;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s;animation:fxBar 1.1s linear infinite}
+html.fx-loader::after,html.fx-leaving::after{opacity:1;visibility:visible}
+html.fx-loader::before,html.fx-leaving::before{opacity:1;visibility:visible}
+html.fx-leaving::after{transition-duration:.32s}
+@keyframes fxBar{from{background-position:0 0}to{background-position:-200% 0}}
+html.fx-loader body{overflow:hidden}
+
+/* ---------- Scroll progress / back to top / cursor glow ---------- */
+.fx-progress{position:fixed;left:0;top:0;height:3px;width:0;z-index:2147482000;background:linear-gradient(90deg,#659840,#9ccd68);box-shadow:0 0 10px rgba(156,205,104,.6);pointer-events:none}
+.fx-top{position:fixed;right:22px;bottom:24px;width:50px;height:50px;border-radius:50%;border:0;background:#143512;color:#9ccd68;font-size:22px;line-height:1;cursor:pointer;z-index:900;box-shadow:0 14px 30px rgba(0,0,0,.25);opacity:0;visibility:hidden;transform:translateY(16px);transition:opacity .35s,transform .35s,visibility .35s,background .25s}
+.fx-top.is-on{opacity:1;visibility:visible;transform:none}
+.fx-top:hover{background:#214f1f}
+.fx-top span{display:block;animation:fxBounce 1.8s ease-in-out infinite}
+@keyframes fxBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.fx-glow{position:fixed;left:0;top:0;width:420px;height:420px;margin:-210px 0 0 -210px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(101,152,64,.13),transparent 65%);opacity:0;transition:opacity .4s}
+.fx-glow.is-on{opacity:1}
+.fx-toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);padding:12px 22px;border-radius:99px;background:#143512;color:#fff;font-weight:700;z-index:2147482500;opacity:0;visibility:hidden;transition:.35s}
+.fx-toast.is-on{opacity:1;visibility:visible;transform:translate(-50%,0)}
+
+/* ---------- Staggered reveal (only when JS is ready) ---------- */
+html.fx-ready .fx-reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--fx-d,0s)}
+html.fx-ready .fx-reveal.is-in{opacity:1;transform:none}
+
+/* ---------- Tilt / shine / magnetic ---------- */
+.fx-tilt{transition:transform .35s ease,box-shadow .35s ease;will-change:transform}
+.fx-tilt.is-tilting{transition:transform .08s linear}
+.proof-card{position:relative;overflow:hidden}
+.proof-card::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.28) 50%,transparent 65%);transform:translateX(-120%);transition:transform .9s ease;pointer-events:none}
+.proof-card:hover::after{transform:translateX(120%)}
+.proof-card img{transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.proof-card:hover img{transform:scale(1.07)}
+.proof-card .proof-caption b{transition:transform .35s ease}
+.proof-card:hover .proof-caption b{transform:translate(4px,-4px)}
+.btn.fx-mag{transition:transform .25s ease}
+
+/* ---------- News / activity pages ---------- */
+.nx-hero-bg{will-change:transform}
+.nx-figure{position:relative;overflow:hidden;border-radius:20px;cursor:zoom-in}
+.nx-figure img{transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.nx-figure:hover img{transform:scale(1.04)}
+.nx-figure::after,.nx-shot::after{content:"ดูภาพใหญ่ ⤢";position:absolute;right:14px;bottom:14px;padding:8px 14px;border-radius:99px;background:rgba(20,53,18,.88);color:#fff;font-size:13px;font-weight:700;opacity:0;transform:translateY(8px);transition:.3s;pointer-events:none}
+.nx-figure:hover::after,.nx-shot:hover::after{opacity:1;transform:none}
+.nx-gallery{margin:34px 0 8px}
+.nx-gallery-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:16px}
+.nx-gallery-head b{font-size:clamp(20px,2.4vw,26px);color:#143512;position:relative;padding-left:18px}
+.nx-gallery-head b::before{content:"";position:absolute;left:0;top:.2em;bottom:.2em;width:5px;border-radius:5px;background:linear-gradient(180deg,#659840,#4e7a2e)}
+.nx-gallery-head span{font-size:13.5px;color:#6a756d}
+.nx-gallery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.nx-shot{position:relative;margin:0;overflow:hidden;border-radius:18px;background:#e7efe6;cursor:zoom-in;box-shadow:0 12px 30px rgba(20,53,18,.1)}
+.nx-shot:first-child{grid-column:1/-1}
+.nx-shot img{display:block;width:100%;height:100%;aspect-ratio:16/10;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.nx-shot:first-child img{aspect-ratio:21/9}
+.nx-shot:hover img{transform:scale(1.07)}
+.nx-shot figcaption{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 14px;color:#fff;font-weight:600;font-size:14.5px;line-height:1.5;background:linear-gradient(0deg,rgba(12,33,11,.82),transparent)}
+@media(max-width:640px){.nx-gallery-grid{grid-template-columns:1fr}.nx-shot:first-child img{aspect-ratio:16/10}}
+.nx-share{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:99px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:#fff;font:inherit;font-size:13.5px;cursor:pointer;transition:background .25s,transform .25s}
+.nx-share:hover{background:rgba(156,205,104,.9);color:#143512;transform:translateY(-2px)}
+
+/* ---------- Lightbox ---------- */
+.fx-lightbox{position:fixed;inset:0;z-index:2147482600;display:grid;place-items:center;background:rgba(9,24,8,.92);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;padding:4vh 4vw}
+.fx-lightbox.is-on{opacity:1;visibility:visible}
+.fx-lightbox figure{margin:0;max-width:min(1100px,92vw);display:grid;gap:12px;justify-items:center;transform:scale(.96);transition:transform .35s}
+.fx-lightbox.is-on figure{transform:none}
+.fx-lightbox img{max-width:100%;max-height:78vh;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.5);object-fit:contain}
+.fx-lightbox figcaption{color:#e9f0e5;font-size:15px;text-align:center}
+.fx-lightbox button{position:absolute;border:0;border-radius:50%;width:48px;height:48px;background:rgba(255,255,255,.14);color:#fff;font-size:22px;cursor:pointer;transition:background .2s}
+.fx-lightbox button:hover{background:#9ccd68;color:#143512}
+.fx-lb-close{top:22px;right:22px}.fx-lb-prev{left:22px;top:50%}.fx-lb-next{right:22px;top:50%}
+
+/* ---------- Mascot (hero greeting) ---------- */
+.hero-sprout img{display:block;width:100%;height:auto;filter:drop-shadow(0 16px 20px rgba(0,0,0,.35));animation:ctBob 3.6s ease-in-out infinite;transform-origin:50% 100%}
+.hero-sprout-bubble{animation:fxBubble 4.2s ease-in-out infinite}
+@keyframes fxBubble{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+
+/* ---------- Product slides: the detail button must stay inside the card ---------- */
+@media (min-width:1001px){
+  html body .product-carousel-stage{height:690px!important}
+  html body .product-slide{height:580px!important}
+  html body .product-slide-content{justify-content:flex-start!important;padding-top:32px!important;padding-bottom:26px!important}
+}
+@media (max-width:1000px){
+  html body .product-carousel-stage{height:780px!important}
+  html body .product-slide{width:min(92vw,640px)!important;max-width:none!important;height:710px!important;grid-template-columns:1fr!important;grid-template-rows:250px minmax(0,1fr)!important}
+  html body .product-slide-image{height:250px!important;min-height:0!important}
+  html body .product-slide-content{padding:24px 26px 24px!important;overflow:visible!important;justify-content:flex-start!important}
+}
+@media (max-width:560px){
+  html body .product-carousel-stage{height:840px!important}
+  html body .product-slide{height:775px!important;grid-template-rows:230px minmax(0,1fr)!important}
+  html body .product-slide-image{height:230px!important}
+  html body .product-slide-content{padding:20px 20px 22px!important}
+  html body .product-carousel-controls{flex-wrap:wrap!important;gap:12px!important}
+  html body .product-carousel-hint{flex:1 1 100%!important;max-width:none!important;order:3}
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  html::after,html::before{display:none!important}
+  html.fx-ready .fx-reveal{opacity:1!important;transform:none!important}
+  .fx-glow,.fx-top span,.hero-sprout img,.hero-sprout-bubble{animation:none!important}
+  .proof-card::after{display:none}
+}
+
+/* hero greeting mascot: a little larger so the new character reads clearly */
+@media (min-width:761px){.hero-sprout{width:clamp(130px,13.5vw,190px)!important}}
+
+/* ---------- Hero: slow farm slideshow (no machines), 5 photos x 8s ---------- */
+.hero-image .hero-slide{position:absolute;inset:0;background-size:cover;background-repeat:no-repeat;opacity:0;transform:scale(1.04);animation:fxHero 40s linear infinite!important;will-change:opacity,transform}
+.hero-image .hero-slide-a{background-image:url('../images/farm-greenhouse.webp');background-position:center 48%;animation-delay:-1.6s!important}
+.hero-image .hero-slide-b{background-image:url('../images/vegetable-farm-natural.webp');background-position:center 50%;animation-delay:6.4s!important}
+.hero-image .hero-slide-c{background-image:url('../images/greenhouse-valley.webp');background-position:center 52%;animation-delay:14.4s!important}
+.hero-image .hero-slide-d{background-image:url('../images/organic-vegetables-farm.webp');background-position:center 55%;animation-delay:22.4s!important}
+.hero-image .hero-slide-e{background-image:url('../images/compost-soil-seedlings.webp');background-position:center 50%;animation-delay:30.4s!important}
+@keyframes fxHero{0%{opacity:0;transform:scale(1.04) translate3d(0,0,0)}4%{opacity:1}20%{opacity:1}25%{opacity:0;transform:scale(1.13) translate3d(-1.2%,-.8%,0)}25.01%,100%{opacity:0;transform:scale(1.04) translate3d(0,0,0)}}
+@media (prefers-reduced-motion:reduce){.hero-image .hero-slide{animation:none!important}.hero-image .hero-slide-a{opacity:1!important}}
+
+/* ---------- Photo galleries with real photos ---------- */
+.nx-gallery-grid.is-portrait{grid-template-columns:repeat(4,minmax(0,1fr))}
+.nx-gallery-grid.is-portrait .nx-shot:first-child{grid-column:auto}
+.nx-gallery-grid.is-portrait .nx-shot img,.nx-gallery-grid.is-portrait .nx-shot:first-child img{aspect-ratio:3/4}
+@media(max-width:860px){.nx-gallery-grid.is-portrait{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.nx-page .nx-gallery-grid .nx-shot:first-child{grid-column:auto}
+.nx-gallery-grid.is-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.nx-gallery-grid.is-two .nx-shot img,.nx-gallery-grid.is-two .nx-shot:first-child img{aspect-ratio:16/10}
+@media(max-width:640px){.nx-gallery-grid.is-two{grid-template-columns:1fr}}
+.page-gallery{margin-top:8px}
+.nx-source-note{margin:12px 2px 0;font-size:13.5px;color:#5c6a60}
+
+/* ---------- Header greeting mascot (waving) ---------- */
+.header-wave{display:flex;align-items:center;gap:6px;margin:0 auto 0 14px;pointer-events:none;flex:0 0 auto}
+.header-wave-mascot{display:block;width:44px;transform-origin:50% 100%;animation:fxWaveBody 2.6s ease-in-out infinite}
+.header-wave-mascot img{display:block;width:100%;height:auto;filter:drop-shadow(0 4px 6px rgba(20,48,24,.25))}
+.header-wave-bubble{position:relative;padding:7px 14px;border-radius:99px;background:#fff;color:#255127;font-weight:800;font-size:14px;line-height:1.2;white-space:nowrap;box-shadow:0 6px 16px rgba(20,48,24,.14);border:1px solid #dbe6d2;animation:fxBubbleIn 2.6s ease-in-out infinite;transform-origin:0 50%}
+.header-wave-bubble::before{content:"";position:absolute;left:-5px;top:50%;width:10px;height:10px;margin-top:-5px;background:#fff;border-left:1px solid #dbe6d2;border-bottom:1px solid #dbe6d2;transform:rotate(45deg)}
+.wave-hand{display:inline-block;font-style:normal;transform-origin:70% 80%;animation:fxHand 1.3s ease-in-out infinite}
+@keyframes fxWaveBody{0%,100%{transform:rotate(0) translateY(0)}20%{transform:rotate(-7deg) translateY(-2px)}40%{transform:rotate(6deg) translateY(0)}60%{transform:rotate(-5deg) translateY(-2px)}80%{transform:rotate(3deg) translateY(0)}}
+@keyframes fxHand{0%,100%{transform:rotate(0)}15%{transform:rotate(18deg)}30%{transform:rotate(-12deg)}45%{transform:rotate(20deg)}60%{transform:rotate(-8deg)}75%{transform:rotate(12deg)}}
+@keyframes fxBubbleIn{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@media(max-width:1100px){.header-wave-bubble{display:none}.header-wave-mascot{width:40px}}
+@media(max-width:560px){.header-wave{margin-left:8px}.header-wave-mascot{width:36px}}
+@media(prefers-reduced-motion:reduce){.header-wave-mascot,.header-wave-bubble,.wave-hand{animation:none!important}}
+
+/* ---------- Thank-you band (footer, every page) ---------- */
+.thanks-band{background:linear-gradient(135deg,#255127 0%,#1c4220 55%,#14301a 100%);color:#fff;position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.1)}
+.thanks-band::before,.thanks-band::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.thanks-band::before{width:360px;height:360px;right:-80px;top:-160px;background:radial-gradient(circle,rgba(139,189,92,.28),transparent 68%);animation:blobDrift 16s ease-in-out infinite}
+.thanks-band::after{width:260px;height:260px;left:-60px;bottom:-140px;background:radial-gradient(circle,rgba(202,222,210,.18),transparent 68%);animation:blobDrift 20s ease-in-out infinite reverse}
+.thanks-inner{position:relative;z-index:1;display:flex;align-items:center;gap:clamp(16px,3vw,34px);padding-top:clamp(28px,4vw,44px);padding-bottom:clamp(28px,4vw,44px)}
+.thanks-mascot{flex:0 0 auto;width:clamp(70px,9vw,96px)}
+.thanks-mascot img{display:block;width:100%;height:auto;filter:drop-shadow(0 10px 14px rgba(0,0,0,.3));animation:ctBob 3.6s ease-in-out infinite}
+.thanks-copy{flex:1;min-width:0}
+.thanks-copy b{display:block;font-size:clamp(20px,2.6vw,28px);line-height:1.4;color:#caded2;margin-bottom:6px}
+.thanks-copy p{margin:0;font-size:clamp(15px,1.6vw,18px);line-height:1.8;color:#eaf1e6;max-width:680px}
+.thanks-link{flex:0 0 auto;padding:13px 24px;border-radius:99px;background:#8bbd5c;color:#10260f;font-weight:800;transition:transform .25s,background .25s}
+.thanks-link:hover{background:#bddd93;transform:translateY(-3px)}
+@media(max-width:700px){.thanks-inner{flex-wrap:wrap}.thanks-link{width:100%;text-align:center}}
+@media(prefers-reduced-motion:reduce){.thanks-band::before,.thanks-band::after,.thanks-mascot img{animation:none!important}}
+
+/* ---------- 3D tilt: card tilts, image scales and follows the pointer ---------- */
+.fx-tilt{transform-style:preserve-3d}
+.fx-tilt.is-tilting{box-shadow:0 26px 54px rgba(20,48,24,.22)!important}
+.fx-tilt img{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.fx-tilt.is-tilting img{transform:scale(1.07) translate(var(--tx,0px),var(--ty,0px))!important;transition:transform .12s linear!important}
+
+/* ---------- Ripple on click ---------- */
+.fx-rip-host{position:relative}
+.fx-rip-wrap{position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;z-index:0}
+.fx-ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.28;transform:scale(0);animation:fxRipple .7s ease-out forwards}
+@keyframes fxRipple{to{transform:scale(1);opacity:0}}
+@media(prefers-reduced-motion:reduce){.fx-ripple{display:none}}
+
+/* footer: thank-you band sits flush at the top of the footer with room below */
+.footer:has(> .thanks-band){padding-top:0!important}
+.footer>.thanks-band{margin-bottom:clamp(34px,4vw,52px)}
